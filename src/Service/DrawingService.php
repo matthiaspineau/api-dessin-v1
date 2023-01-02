@@ -6,8 +6,7 @@ class DrawingService {
 		
     }
     
-    private $PATH_UPLOADS = '../../uploads/';
-    // private $PATH_UPLOADS = dirname(__FILE__, 4) . '/uploads/'
+    // private $PATH_UPLOADS = dirname(__FILE__, 3) . '/uploads/';
 
     public function deleteDraw($params) {
 
@@ -24,7 +23,7 @@ class DrawingService {
             $arrayFormatName = array('original', 'large', 'medium', 'small', 'thumbnail');
             
             foreach($arrayFormatName as $value) {
-                $pathUploads = $this->PATH_UPLOADS . $value;
+                $pathUploads =  dirname(__FILE__, 3) . '/uploads/' . $value;
                 $location =  $pathUploads.'/'.$filename;
                 
                 if (file_exists($location)) {
@@ -112,28 +111,28 @@ class DrawingService {
             case 'large':
                 $width = 1024;
                 $height = 1024;
-                $pathUploads = $this->PATH_UPLOADS . 'large';
+                $pathUploads =  dirname(__FILE__, 3) . '/uploads/' . 'large';
             break;
             case 'medium':
                 $width = 768;
                 $height = 768;
-                $pathUploads = $this->PATH_UPLOADS . 'medium';
+                $pathUploads =  dirname(__FILE__, 3) . '/uploads/' . 'medium';
                 break;
             case 'small':
                 $width = 360;
                 $height = 360;
-                $pathUploads = $this->PATH_UPLOADS . 'small';
+                $pathUploads =  dirname(__FILE__, 3) . '/uploads/' . 'small';
                 break;
             case 'thumbnail':
                 $width = 150;
                 $height = 150;
-                $pathUploads = $this->PATH_UPLOADS . 'thumbnail';
+                $pathUploads =  dirname(__FILE__, 3) . '/uploads/' . 'thumbnail';
                 break;
                         
             default:
                 $width = 1024;
                 $height = 1024;
-                $pathUploads = $this->PATH_UPLOADS . 'large';
+                $pathUploads =  dirname(__FILE__, 3) . '/uploads/' . 'large';
                 break;
         }
 
@@ -158,7 +157,8 @@ class DrawingService {
      */
     public function imageOriginalUpload(array $file) {
 
-        $pathUploads = $this->PATH_UPLOADS . 'original';
+        $pathUploads =  dirname(__FILE__, 3) . '/uploads/' . 'original';
+
         $filename = $file['new_name'];
 
         $location =  $pathUploads.'/'.$filename;
