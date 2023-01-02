@@ -1,0 +1,6 @@
+.DS_Store
+composer.phar
+/.vscode/
+/node_modules/
+
+/uploads/
