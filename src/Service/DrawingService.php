@@ -85,8 +85,8 @@ class DrawingService {
             // ------ upload images in folder
             if (isset($result['response']) && $result['response'] == 200) {
 
-                // $arrayFormatName = array('large', 'medium', 'small', 'thumbnail');
-                $arrayFormatName = array('small');
+                $arrayFormatName = array('large', 'medium', 'small', 'thumbnail');
+                //$arrayFormatName = array('small');
                 
                 foreach($arrayFormatName as $value) {
                     $this->imageOtherUpload($newFile, $value);
