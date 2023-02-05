@@ -68,11 +68,12 @@ class API_Handler {
 
 	public function ComicsController($action, $params) {
 
-		$drawingService = new DrawingService();
-		$arrayReturn = $drawingService->$action($params);
+		$comicsService = new ComicsService();
+		$arrayReturn = $comicsService->$action($params);
 
 		return $arrayReturn;
 	}
+
 
 
 	// -------------------------------------------------------------------
@@ -87,11 +88,14 @@ class API_Handler {
 			'getToken' => ['class' => 'API_Handler', 'controller_name' => 'getToken'],
 			'getArticles' => ['class' => 'API_Handler', 'controller_name' => 'getArticles'],
 			
-			// api blog - dessin
+			// api draw - dessin
 			'DrawingController' => ['class' => 'API_Handler', 'controller_name' => 'DrawingController'],
 
-			// api blog - dessin
+			// api draw - comics
 			'ComicsController' => ['class' => 'API_Handler', 'controller_name' => 'ComicsController'],
+
+			// api draw - dessin
+			'MediaController' => ['class' => 'API_Handler', 'controller_name' => 'MediaController'],
 		];
 
 	}

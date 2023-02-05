@@ -17,6 +17,7 @@ $requestController = '';
 $requestAction = '';
 $requestParams = '';
 // var_dump($_SERVER['REQUEST_METHOD']);
+// var_dump($_GET);
 // var_dump($_FILES);
 // var_dump(json_decode(file_get_contents('php://input'), true));
 
@@ -26,11 +27,23 @@ if (in_array($requestMethod, ["GET", "POST", "PUT", "DELETE", "OPTIONS"])) {
 		return;
 	}
 
-	// if ($requestMethod == "GET") {
+	if ($requestMethod == "GET") {
+		$get = $_GET;
 		// $q = $_GET['q'];
 		// $requestController = $q;
 		// $requestParams = '';
-	// } 
+
+		if (isset($get['controller'])) {
+			$requestController = $get['controller'];
+		}
+		if (isset($get['action'])) {
+			$requestAction = $get['action'];
+		}
+		if (isset($get['params'])) {
+			$requestParams = $get['params'];
+		}
+
+	} 
 
 	if ($requestMethod == "POST") {
 
@@ -50,10 +63,12 @@ if (in_array($requestMethod, ["GET", "POST", "PUT", "DELETE", "OPTIONS"])) {
 			$requestParams = $post['params'];
 		}
 	
-		
+		// var_dump($requestParams);
 		if (isset($requestParams) && $requestParams != '') {
 			$requestParams = json_decode($requestParams, true);
 		}
+
+		// var_dump($requestParams);
 	
 	}
 

@@ -6,6 +6,7 @@ class DrawingDao extends Data_Access {
 	protected $object_view_test_article = 'test_article';
 	protected $object_view_drawing_item = 'drawing_item';
 	protected $object_view_drawing_category = 'drawing_category';
+	protected $object_view_store_media = 'store_media';
 
 	//----------------------------------------------------------------------------------------------------
 	public function __construct() {
@@ -19,25 +20,98 @@ class DrawingDao extends Data_Access {
 	}
 
 	//----------------------------------------------------------------------------------------------------
+
+	public function addStoreMedia($params) {
+
+		$values = array();
+		var_dump($params);
+		$values[] = sprintf("( '%s', '%s' )"
+			, mysqli_real_escape_string($GLOBALS['dbConnection'], $params['reference']) 
+			, $params['information'] 
+		);
+
+		$sql = sprintf("INSERT INTO %s "
+					. " ( `reference`, `information`) "
+					. " VALUES "
+					. " %s "
+					, CONST_DB_SCHEMA . "." . $this->object_view_store_media
+					, $values
+				);
+		
+		$result = $this->setResultSetArray($sql);
+
+		if ($result['response'] !== '200') {
+			$responseArray = App_Response::getResponse('403');
+			$responseArray = array('success' => FALSE, 'response' => 502, 'responseDescription' => 'Dao : erreur lors de l ajout du fichier');
+		} else {
+			$responseArray = $result;
+		} 
 	
+		return $responseArray;
+
+	}	
+
+
+	public function getStoreMedia($params) {
+		// build the query
+		$whereClause = array();
+		$where = '';
+
+		if (isset($params['id']) && count($params['id']) > 0) {
+			$whereClause[] = " id IN (" . implode(', ', $params['id']) . ")";
+		}
+
+		if (!empty($whereClause)) {
+			$where = " WHERE " . implode(' AND ', $whereClause);
+		}
+		$sql = sprintf("SELECT * FROM  %s "
+			. " %s "
+			, CONST_DB_SCHEMA . "." . $this->object_view_store_media
+			, $where
+		);
+		var_dump($sql);
+		$result = $this->getResultSetArray($sql);
+		var_dump($result);
+		if ($result['response'] !== '200') {
+			$responseArray = App_Response::getResponse('403');
+		} else {
+			$responseArray = $result;
+		}
+		return $responseArray;
+
+	}
+
 	/**
 	 * 
 	 */
 	public function saveDrawing($arrayParams) {
 
+		// var_dump($arrayParams);
+
+		$sqlInsertValue = array();
+		foreach($arrayParams as $key => $draw) {
+			$sqlInsertValue[] = sprintf("( '%s', '%s', '%s', %d, '%s')"
+				, mysqli_real_escape_string($GLOBALS['dbConnection'], $draw['new_drawing_name']) 
+				, mysqli_real_escape_string($GLOBALS['dbConnection'], $draw['new_drawing_reference']) 
+				, mysqli_real_escape_string($GLOBALS['dbConnection'], $draw['new_drawing_title'])
+				, $draw['id_drawing_category']
+				, mysqli_real_escape_string($GLOBALS['dbConnection'], $draw['drawing_tags']) 
+			);
+		}
+	
+		$insertValue = implode(', ', $sqlInsertValue);
+
+
 		$sql = sprintf("INSERT INTO %s "
-					. " ( `drawing_name`, `drawing_title`, `id_drawing_category`, `drawing_tags`) "
+					. " ( `drawing_name`, `drawing_reference`, `drawing_title`, `id_drawing_category`, `drawing_tags`) "
 					. " VALUES "
-					. " ( '%s', '%s', %d, '%s') "
+					. " %s "
 					, CONST_DB_SCHEMA . "." . $this->object_view_drawing_item
-					, mysqli_real_escape_string($GLOBALS['dbConnection'], $arrayParams['new_drawing_name']) 
-					, mysqli_real_escape_string($GLOBALS['dbConnection'], $arrayParams['new_drawing_title']) 
-					, $arrayParams['id_drawing_category']
-					, mysqli_real_escape_string($GLOBALS['dbConnection'], $arrayParams['drawing_tags']) 
+					, $insertValue
 				);
-
+		
 		$result = $this->setResultSetArray($sql);
-
+		// var_dump($result);
 		if ($result['response'] !== '200') {
 			$responseArray = App_Response::getResponse('403');
 			$responseArray = array('success' => FALSE, 'response' => 502, 'responseDescription' => 'Dao : erreur lors de l ajout du fichier');
@@ -56,29 +130,62 @@ class DrawingDao extends Data_Access {
 		// build the query
 		$whereClause = array();
 		$where = '';
+		$whereClausePaginate = '';
+		$order = '';
 
 		if (isset($params['id']) && count($params['id']) > 0) {
 			$whereClause[] = " id IN (" . implode(', ', $params['id']) . ")";
 		}
 
-		// $paramsa['tags'] = 'dessin';
+		if (isset($params['search']) && strlen($params['search']) > 0) {
+			$whereClause[] = " drawing_title LIKE '%" . $params['search'] . "%' ";
+		}
+
+		if (isset($params['limit']) && $params['limit'] > 0) {
+			$whereClausePaginate .= " LIMIT " . $params['limit'] . " ";
+		}
+
+		if (isset($params['offset']) && $params['offset'] > 0) {
+			$whereClausePaginate .= " OFFSET " . $params['offset'] . " ";
+		}
+		if (isset($params['order']) && strlen($params['order']) > 0) {
+			$order .= " ORDER BY " . $params['order'] . " ";
+		}
+		if (isset($params['direction']) && strlen($params['direction']) > 0) {
+			$order .= " " . $params['direction'] . " ";
+		}
 		
-		// if (true) {
-		// 	$whereClause[] = " drawing_tags LIKE (" . $paramsa['tags'] . ")";
-		// }
-		//             SELECT * FROM Customers
-		// WHERE CustomerName LIKE '%or%';
 
 		if (!empty($whereClause)) {
 			$where = " WHERE " . implode(' AND ', $whereClause);
 		}
-		$sql = sprintf("SELECT * FROM  %s "
+
+
+
+		// requete 1 for count
+		$sqlForCount = sprintf("SELECT COUNT(*) FROM  %s "
 			. " %s "
 			, CONST_DB_SCHEMA . "." . $this->object_view_drawing_item
 			, $where
 		);
+		$resultForCount = $this->getResultSetArray($sqlForCount);
+		$countItem = intval(implode($resultForCount['data'][0]));
+		// var_dump($countItem);
+		// requete 2 for result final
+
+
+		$sql = sprintf("SELECT * FROM  %s "
+			. " %s  %s "
+			, CONST_DB_SCHEMA . "." . $this->object_view_drawing_item
+			, $where
+			, $whereClausePaginate
+			, $order
+		);
+		// var_dump($sql);
 
 		$result = $this->getResultSetArray($sql);
+		$result['count'] = $countItem;
+		// var_dump($result['count'] );
 	
 		if ($result['response'] !== '200') {
 			$responseArray = App_Response::getResponse('403');

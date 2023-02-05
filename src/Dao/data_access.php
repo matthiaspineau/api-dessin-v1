@@ -43,23 +43,33 @@ abstract class Data_Access {
 			// if an error occurred, raise it.
 			$responseArray = App_Response::getResponse('500');
 			$responseArray['message'] = 'Internal server error. MySQL error: ' . $GLOBALS['dbConnection']->errno . ' ' . $GLOBALS['dbConnection']->error;
-		} else {       
+		} else {    
+			
+			// success
+			// move result set to an associative array
+			$rsArray = $rsData->fetch_all(MYSQLI_ASSOC);
+			// add array to return
+			$responseArray = App_Response::getResponse('200');
+			$responseArray['data'] = $rsArray;
+
+			// -------------------------------------
             // success
-			$rowCount = $rsData->num_rows;
+			// $rowCount = $rsData->num_rows;
 			
-			if ($rowCount != 0) {
-				// move result set to an associative array
-                $rsArray = $rsData->fetch_all(MYSQLI_ASSOC);
+			// if ($rowCount != 0) {
+				// // move result set to an associative array
+                // $rsArray = $rsData->fetch_all(MYSQLI_ASSOC);
 			
-				// add array to return
-				$responseArray = App_Response::getResponse('200');
-				$responseArray['data'] = $rsArray;
-			
-			} else {
-				// no data returned
-				$responseArray = App_Response::getResponse('204');
-                $responseArray['message'] = 'Query did not return any results.';
-			}
+				// // add array to return
+				// $responseArray = App_Response::getResponse('200');
+				// $responseArray['data'] = $rsArray;
+			// } 
+			// else {
+			// 	// no data returned
+			// 	$responseArray = App_Response::getResponse('204');
+            //     $responseArray['message'] = 'Query did not return any results.';
+			// }
+			// -------------------------------------
 			
 		}
 
