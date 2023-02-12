@@ -21,7 +21,7 @@ $mapping = [
     'ComicsDao' => './src/Dao/ComicsDao.php',
     // API Media
     'MediaService' => './src/Service/MediaService.php',
-    'MediasDao' => './src/Dao/MediaDao.php',
+    'MediaDao' => './src/Dao/MediaDao.php',
 ];
 
 spl_autoload_register(function ($class) use ($mapping) {

@@ -21,66 +21,7 @@ class DrawingDao extends Data_Access {
 
 	//----------------------------------------------------------------------------------------------------
 
-	public function addStoreMedia($params) {
-
-		$values = array();
-		var_dump($params);
-		$values[] = sprintf("( '%s', '%s' )"
-			, mysqli_real_escape_string($GLOBALS['dbConnection'], $params['reference']) 
-			, $params['information'] 
-		);
-
-		$sql = sprintf("INSERT INTO %s "
-					. " ( `reference`, `information`) "
-					. " VALUES "
-					. " %s "
-					, CONST_DB_SCHEMA . "." . $this->object_view_store_media
-					, $values
-				);
-		
-		$result = $this->setResultSetArray($sql);
-
-		if ($result['response'] !== '200') {
-			$responseArray = App_Response::getResponse('403');
-			$responseArray = array('success' => FALSE, 'response' => 502, 'responseDescription' => 'Dao : erreur lors de l ajout du fichier');
-		} else {
-			$responseArray = $result;
-		} 
 	
-		return $responseArray;
-
-	}	
-
-
-	public function getStoreMedia($params) {
-		// build the query
-		$whereClause = array();
-		$where = '';
-
-		if (isset($params['id']) && count($params['id']) > 0) {
-			$whereClause[] = " id IN (" . implode(', ', $params['id']) . ")";
-		}
-
-		if (!empty($whereClause)) {
-			$where = " WHERE " . implode(' AND ', $whereClause);
-		}
-		$sql = sprintf("SELECT * FROM  %s "
-			. " %s "
-			, CONST_DB_SCHEMA . "." . $this->object_view_store_media
-			, $where
-		);
-		var_dump($sql);
-		$result = $this->getResultSetArray($sql);
-		var_dump($result);
-		if ($result['response'] !== '200') {
-			$responseArray = App_Response::getResponse('403');
-		} else {
-			$responseArray = $result;
-		}
-		return $responseArray;
-
-	}
-
 	/**
 	 * 
 	 */

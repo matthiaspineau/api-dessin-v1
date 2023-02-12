@@ -6,28 +6,7 @@ class DrawingService {
 		
     }
 
-    public function addStoreMedia($params) {
-
-        $result = array();
-        var_dump($params);
-        $drawingDao = new DrawingDao();
-        $result = $drawingDao->addStoreMedia($params);
-        
-
-        $result = array('success' => TRUE, 'response' => 200, 'responseDescription' => 'le fichier à bien été ajouter');
-        return $result;
-    }
-
-    public function getStoreMedia($params) {
-        var_dump($params);
-        $result = array();
-
-        $drawingDao = new DrawingDao();
-        $result = $drawingDao->getStoreMedia($params);
-
-        return $result;
-
-    }
+    
 
     /**
      * 
