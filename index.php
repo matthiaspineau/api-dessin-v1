@@ -9,7 +9,6 @@ header("Content-Type: text/html; charset=utf-8");
 
 
 require_once ('./src/app_autoloader.php');
-require_once ('./src/information/information.php');
 
 //----------------------------------------------------------------------------------------
 $requestMethod = $_SERVER['REQUEST_METHOD'];

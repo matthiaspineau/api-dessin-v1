@@ -94,6 +94,22 @@ class API_Handler {
 	//                       Fin API media
 	// -------------------------------------------------------------------
 
+		// -------------------------------------------------------------------
+	//                       API media
+	// -------------------------------------------------------------------
+
+	public function MediaGroupsController($action, $params) {
+
+		$mediaGroupsService = new MediaGroupsService();
+		$arrayReturn = $mediaGroupsService->$action($params);
+
+		return $arrayReturn;
+	}
+
+	// -------------------------------------------------------------------
+	//                       Fin API media
+	// -------------------------------------------------------------------
+
 	
 	private function loadFunctionMap() {
 
@@ -110,6 +126,9 @@ class API_Handler {
 
 			// api draw - dessin
 			'MediaController' => ['class' => 'API_Handler', 'controller_name' => 'MediaController'],
+
+			// api draw - media groups
+			'MediaGroupsController' => ['class' => 'API_Handler', 'controller_name' => 'MediaGroupsController'],
 		];
 
 	}

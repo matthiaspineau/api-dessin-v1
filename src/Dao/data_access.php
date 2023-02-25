@@ -35,10 +35,8 @@ abstract class Data_Access {
 
 	//--------------------------------------------------------------------------------------------------------------------
 	protected function getResultSetArray($varQuery) {
-
 		// attempt the query
         $rsData = $GLOBALS['dbConnection']->query($varQuery);
-
 		if (isset($GLOBALS['dbConnection']->errno) && ($GLOBALS['dbConnection']->errno != 0)) {
 			// if an error occurred, raise it.
 			$responseArray = App_Response::getResponse('500');

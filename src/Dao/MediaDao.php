@@ -14,7 +14,7 @@ class MediaDao extends Data_Access {
         }
 	}
 
-    public function getGroupMedia() {
+    public function getGroupMediaDao($params) {
         // build the query
 		$whereClause = array();
 		$where = '';
@@ -49,19 +49,6 @@ class MediaDao extends Data_Access {
 		}
 
 
-
-		// requete 1 for count
-		$sqlForCount = sprintf("SELECT COUNT(*) FROM  %s "
-			. " %s "
-			, CONST_DB_SCHEMA . "." . $this->object_view_media_groups
-			, $where
-		);
-		$resultForCount = $this->getResultSetArray($sqlForCount);
-		$countItem = intval(implode($resultForCount['data'][0]));
-		// var_dump($countItem);
-		// requete 2 for result final
-
-
 		$sql = sprintf("SELECT * FROM  %s "
 			. " %s  %s "
 			, CONST_DB_SCHEMA . "." . $this->object_view_media_groups
@@ -70,11 +57,8 @@ class MediaDao extends Data_Access {
 			, $order
 		);
 		// var_dump($sql);
-
+		$result = array();
 		$result = $this->getResultSetArray($sql);
-		$result['count'] = $countItem;
-		// var_dump($result['count'] );
-	
 		if ($result['response'] !== '200') {
 			$responseArray = App_Response::getResponse('403');
 		} else {
@@ -109,35 +93,6 @@ class MediaDao extends Data_Access {
 
     }
 
-	public function updateMediasOfGroups($params) {
-		$whereClause = array();
-        $newValue = array();
-
-        var_dump($params);
-		if (isset($params['id'])) {
-			$whereClause[] = " id= ". intval($params['id']) ;
-		}
-
-		$sql = sprintf("UPDATE %s "
-			. " SET %s "
-            . ' %s '
-			, CONST_DB_SCHEMA . "." . $this->object_view_media_groups
-            , " 'medias'= '" . json_encode($params['medias']). "'"
-            , " WHERE " . implode(' AND ', $whereClause)
-		);
-        var_dump($sql);
-        $result = array();
-        $result = $this->getResultSetArray($sql);
-
-        var_dump($result);
-        if ( !$result['success'] ) {
-            return App_Response::getResponse('403');
-        }
-
-
-
-        return $result;
-	}
 
     public function updateGroupMedia($params) {
 
