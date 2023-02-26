@@ -1,7 +1,6 @@
 <?php
 class MediaGroupsDao extends Data_Access {
 
-    // protected $object_name = 'app_test';
     protected $object_view_media_groups = 'media_groups';
 
     public function __construct() {
@@ -14,7 +13,64 @@ class MediaGroupsDao extends Data_Access {
         }
 	}
 
+    public function getGroupMediaDao($params) {
+        // var_dump($params);
+        $result = array();
+        $exec = array();
+        // build the query
+		$whereClause = array();
+		$where = '';
+		$whereClausePaginate = '';
+		$order = '';
+
+		if (isset($params['id']) && count($params['id']) > 0) {
+			$whereClause[] = " id IN (" . implode(', ', $params['id']) . ")";
+		}
+
+		if (isset($params['search']) && strlen($params['search']) > 0) {
+			$whereClause[] = " drawing_title LIKE '%" . $params['search'] . "%' ";
+		}
+
+		if (isset($params['limit']) && $params['limit'] > 0) {
+			$whereClausePaginate .= " LIMIT " . $params['limit'] . " ";
+		}
+
+		if (isset($params['offset']) && $params['offset'] > 0) {
+			$whereClausePaginate .= " OFFSET " . $params['offset'] . " ";
+		}
+		if (isset($params['order']) && strlen($params['order']) > 0) {
+			$order .= " ORDER BY " . $params['order'] . " ";
+		}
+		if (isset($params['direction']) && strlen($params['direction']) > 0) {
+			$order .= " " . $params['direction'] . " ";
+		}
+		
+		if (!empty($whereClause)) {
+			$where = " WHERE " . implode(' AND ', $whereClause);
+		}
+
+		$sql = sprintf("SELECT * FROM  %s "
+        . " %s  %s "
+        , CONST_DB_SCHEMA . "." . $this->object_view_media_groups
+        , $where
+        , $whereClausePaginate
+        , $order
+    );
+    // var_dump($sql);
+
+		$exec = $this->getResultSetArray($sql);
+		if ($exec['response'] !== '200') {
+			$result = App_Response::getResponse('403');
+		} else {
+			$result = $exec;
+		}
+		return $result;
+    }
+
     public function addMediaGroupsDao($params) {
+
+        $result = array();
+        $exec = array();
 
         $sql = sprintf("INSERT INTO %s "
         . " ( `reference`, `information`, `medias`) "
@@ -26,23 +82,23 @@ class MediaGroupsDao extends Data_Access {
         , json_encode(array("empty" => true))
 
         );
-        var_dump($sql);
-        $result = $this->setResultSetArray($sql);
-        var_dump($result);
-        if ($result['response'] !== '200' || $result['success'] == false) {
-            $responseArray = App_Response::getResponse('403');
-            $responseArray = array('success' => FALSE, 'response' => 502, 'responseDescription' => 'Dao : erreur lors de l ajout du group');
+
+        $exec = $this->setResultSetArray($sql);
+
+        if ($exec['response'] !== '200' || $exec['success'] == false) {
+            $result = array('success' => FALSE, 'response' => 502, 'responseDescription' => 'Dao : erreur lors de l ajout du group');
         } else {
-            $responseArray = $result;
+            $result = $exec;
         } 
 
-        return $responseArray;
+        return $result;
     }
 
     
-	public function updateMediasOfGroupsDao($params) {
+	public function updateMediasGroupsDao($params) {
 
-        // var_dump($params);
+        $result = array();
+        $exec = array();
 
         $setClause = array();
         if (isset($params['medias']) && strlen($params['medias']) > 0) {
@@ -67,13 +123,13 @@ class MediaGroupsDao extends Data_Access {
             ,  $params['id']
 		);  
 
-        var_dump($sql);
-        $result = array();
-        $result = $this->setResultSetArray($sql);
+        $exec = $this->setResultSetArray($sql);
 
-        if ( !$result['success'] ) {
+        if ( !$exec['success'] ) {
             return App_Response::getResponse('403');
         }
+
+        $result = $exec;
 
         return $result;
 	}

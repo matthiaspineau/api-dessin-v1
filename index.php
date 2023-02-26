@@ -2,7 +2,7 @@
 
 header('Access-Control-Allow-Origin: *'); 
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-// header('Access-Control-Max-Age: 1000');
+header('Access-Control-Max-Age: 1000');
 header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token, Authorization');
 // header('Content-Type: application/json');
 header("Content-Type: text/html; charset=utf-8");
@@ -31,7 +31,7 @@ if (in_array($requestMethod, ["GET", "POST", "PUT", "DELETE", "OPTIONS"])) {
 		// $q = $_GET['q'];
 		// $requestController = $q;
 		// $requestParams = '';
-
+		// var_dump($get);
 		if (isset($get['controller'])) {
 			$requestController = $get['controller'];
 		}

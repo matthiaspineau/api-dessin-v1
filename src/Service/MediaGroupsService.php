@@ -2,13 +2,12 @@
 class MediaGroupsService {
 
     public function __construct() {
-		
+
     }
 
-
     public function addMediaGroups($params) {
+
         $result = array();
-        // var_dump($params);
         $mediaGroupsDao = new MediaGroupsDao();
         $result = $mediaGroupsDao->addMediaGroupsDao($params);
         
@@ -19,44 +18,54 @@ class MediaGroupsService {
 
     public function getGroupMedia($params) {
         // $get = $_GET;
-        $get = $_POST;
+        $reqParams = array();
+        $reqParams = $params;
+        $parameters = array();
 
-        // var_dump($get['search']);
 
-        if (isset($get['id']) && strlen($get['id']) > 0) {
-            $params['id'] = $get['id'];
+        // if (isset($_GET) && !empty($_GET)) {
+        //     $reqParams = $_GET;
+        // }
+        // if (isset($_POST)  && !empty($_POST)) {
+        //     $reqParams = $_POST;
+        // }
+    
+        // var_dump($reqParams);
+        // var_dump(isset($reqParams['offset']));
+
+        if (isset($reqParams['id']) && strlen($reqParams['id']) > 0) {
+            $parameters['id'] = $reqParams['id'];
         }
-        if (isset($get['search']) && strlen($get['search']) > 0) {
-            $params['search'] = $get['search'];
+        if (isset($reqParams['search']) && strlen($reqParams['search']) > 0) {
+            $parameters['search'] = $reqParams['search'];
         }
-        if (isset($get['limit'])) {
-            $params['limit'] =  intval($get['limit']);
+        if (isset($reqParams['limit'])) {
+            $parameters['limit'] =  $reqParams['limit'];
         }
-        if (isset($get['offset'])) {
-            $params['offset'] =  intval($get['offset']);
+        if (isset($reqParams['offset'])) {
+            $parameters['offset'] =  $reqParams['offset'];
         }
-        if (isset($params['order']) && strlen($params['order']) > 0) {
-			$params['order'] =  $get['order'];
+        if (isset($reqParams['order']) && strlen($reqParams['order']) > 0) {
+			$parameters['order'] =  $reqParams['order'];
 		}
-		if (isset($params['direction']) && strlen($params['direction']) > 0) {
-			$params['direction'] =  $get['direction'];
+		if (isset($reqParams['direction']) && strlen($reqParams['direction']) > 0) {
+			$parameters['direction'] =  $reqParams['direction'];
 		}
 
 
         $result = array();
         // var_dump($params);
-        $mediaDao = new MediaDao();
-        $result = $mediaDao->getGroupMediaDao($params);
+        $mediaGroupsDao = new MediaGroupsDao();
+        $result = $mediaGroupsDao->getGroupMediaDao($parameters);
 
         return $result;
     }
-
     
-    public function updateMediasOfGroups($params) {
+    public function updateMediasGroups($params) {
 
-        var_dump($params);
+        $result = array();
         $mediaGroupsDao = new MediaGroupsDao();
-        $result = $mediaGroupsDao->updateMediasOfGroupsDao($params);
+        $result = $mediaGroupsDao->updateMediasGroupsDao($params);
         return $result;
     }
    

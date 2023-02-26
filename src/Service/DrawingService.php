@@ -94,8 +94,8 @@ class DrawingService {
             // $arrayFormatName = array('large', 'medium', 'small', 'thumbnail');
             $arrayFormatName = array( 'small', 'thumbnail');
             
-            foreach($arrayFormatName as $value) {
-                $this->imageOtherSizeUpload($newFile, $value);
+            foreach($arrayFormatName as $formatSize) {
+                $this->imageOtherSizeUpload($newFile, $formatSize);
             }
             $this->imageOriginalUpload($newFile);
             // ------ fin upload images in folder ------

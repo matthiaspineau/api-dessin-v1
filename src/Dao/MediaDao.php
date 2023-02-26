@@ -1,8 +1,7 @@
 <?php
 class MediaDao extends Data_Access {
 
-    // protected $object_name = 'app_test';
-    protected $object_view_media_groups = 'media_groups';
+    protected $object_view_media = 'media';
 
     public function __construct() {
 
@@ -14,8 +13,12 @@ class MediaDao extends Data_Access {
         }
 	}
 
-    public function getGroupMediaDao($params) {
-        // build the query
+    public function getMediaCollectionDao($params) {
+ 
+        $exec = array();
+        $execCount = array();
+        $result = array();
+        $resultCount = 0;
 		$whereClause = array();
 		$where = '';
 		$whereClausePaginate = '';
@@ -48,124 +51,99 @@ class MediaDao extends Data_Access {
 			$where = " WHERE " . implode(' AND ', $whereClause);
 		}
 
+		// requete count media pour la pagination
+		$sqlCount = sprintf("SELECT COUNT(*) FROM  %s "
+			. " %s "
+			, CONST_DB_SCHEMA . "." . $this->object_view_media
+			, $where
+		);
+		$execCount = $this->getResultSetArray($sqlCount);
+		$resultCount = intval(implode($execCount['data'][0]));
+
 
 		$sql = sprintf("SELECT * FROM  %s "
 			. " %s  %s "
-			, CONST_DB_SCHEMA . "." . $this->object_view_media_groups
+			, CONST_DB_SCHEMA . "." . $this->object_view_media
 			, $where
 			, $whereClausePaginate
 			, $order
 		);
-		// var_dump($sql);
-		$result = array();
-		$result = $this->getResultSetArray($sql);
-		if ($result['response'] !== '200') {
-			$responseArray = App_Response::getResponse('403');
+
+		$exec = $this->getResultSetArray($sql);
+		$exec['count'] = $resultCount;
+	
+		if ($exec['response'] !== '200') {
+			$result = App_Response::getResponse('403');
 		} else {
-			$responseArray = $result;
+			$result = $exec;
 		}
-		return $responseArray;
+		return $result;
     }
 
-    public function addGroupMedia($params) {
-       
+    public function createMediaDao($params) {
+ 
+		$values = array();
+		foreach($params as $key => $media) {
+			$values[] = sprintf("( '%s', '%s', '%s', %d, '%s')"
+				, mysqli_real_escape_string($GLOBALS['dbConnection'], $media['new_drawing_name']) 
+				, mysqli_real_escape_string($GLOBALS['dbConnection'], $media['new_drawing_reference']) 
+				, mysqli_real_escape_string($GLOBALS['dbConnection'], $media['new_drawing_title'])
+				, $media['id_drawing_category']
+				, mysqli_real_escape_string($GLOBALS['dbConnection'], $media['drawing_tags']) 
+			);
+		}
 
-        $sql = sprintf("INSERT INTO %s "
-            . " ( `reference`, `information`) "
-            . " VALUES "
-            . " ('%s', '%s') "
-            , CONST_DB_SCHEMA . "." . $this->object_view_media_groups
-            , $params['reference']
-            , json_encode(array("empty" => true))
+		$sql = sprintf("INSERT INTO %s "
+                . " ( `drawing_name`, `drawing_reference`, `drawing_title`, `id_drawing_category`, `drawing_tags`) "
+                . " VALUES "
+                . " %s "
+                , CONST_DB_SCHEMA . "." . $this->object_view_media
+                , implode(', ', $values)
+            );
+		
+		$result = $this->setResultSetArray($sql);
 
-        );
-        var_dump($sql);
-        $result = $this->setResultSetArray($sql);
-        var_dump($result);
-        if ($result['response'] !== '200' || $result['success'] == false) {
-			$responseArray = App_Response::getResponse('403');
-			$responseArray = array('success' => FALSE, 'response' => 502, 'responseDescription' => 'Dao : erreur lors de l ajout du group');
+		if ($result['response'] !== '200') {
+
+			$responseArray = array(
+                'success' => false, 
+                'response' => 403,
+                'responseDescription' => 'Dao : erreur lors de l ajout du fichier');
 		} else {
 			$responseArray = $result;
 		} 
 	
 		return $responseArray;
-
     }
 
+    public function updateMediaDao() {
+        
+    }
 
-    public function updateGroupMedia($params) {
+    public function deleteMediaDao() {
 
-        $whereClause = array();
-        $newValue = array();
+        $result = array();
+        $exec = array();
 
-        var_dump($params);
 		if (isset($params['id'])) {
-			$whereClause[] = " id= ". intval($params['id']) ;
+			$sql = sprintf("DELETE FROM %s "
+					. " WHERE "
+					. " id= %d "
+					, CONST_DB_SCHEMA . "." . $this->object_view_media
+					, $params['id']
+				);
+
+			$exec = $this->setResultSetArray($sql);
 		}
 
-    
-
-
-
-       
-
-
-        // UPDATE table
-        // SET colonne_1 = 'valeur 1', colonne_2 = 'valeur 2', colonne_3 = 'valeur 3'
-        // WHERE condition
-
-        // UPDATE `media_groups` SET `media_tmp` = '{\"empty\": true}' WHERE `media_groups`.`id` = 3;
-
-        $sql = sprintf("UPDATE %s "
-			. " SET %s "
-            . ' %s '
-			, CONST_DB_SCHEMA . "." . $this->object_view_media_groups
-            , " media_tmp= '" . json_encode(array("a" => "oui")). "'"
-            , " WHERE " . implode(' AND ', $whereClause)
-		);
-        var_dump($sql);
-        $result = array();
-        $result = $this->getResultSetArray($sql);
-
-        var_dump($result);
-        if ( !$result['success'] ) {
-            return App_Response::getResponse('403');
-        }
-
-
-
-        return $result;
-    }
-
-
-
-    public function a() {
-        // $whereClause = array();
-        // var_dump($params);
-		// if (isset($params['id'])) {
-		// 	$whereClause[] = " id = ". intval($params['id']) ;
-		// }
-
-        // // get groups
-        // $sql = sprintf("SELECT * FROM  %s "
-		// 	. " %s "
-		// 	, CONST_DB_SCHEMA . "." . $this->object_view_media_groups
-		// 	, " WHERE " . implode(' AND ', $whereClause)
-		// );
-        
-
-        // $result = array();
-        // $result = $this->getResultSetArray($sql);
-
-        // if ( !$result['success'] ) {
-        //     return App_Response::getResponse('403');
-        // }
-
-        // $groupsMedia = $result['data'][0];
-        // $information = json_decode($groupsMedia['information'], true);
-        // var_dump($information);
+		if ($exec['response'] !== '200') {
+			$result = App_Response::getResponse('403');
+		} else {
+			$result = $exec;
+		}
+		return $result;
     }
 
     
+  
 }
