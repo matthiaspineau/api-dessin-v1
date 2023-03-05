@@ -13,7 +13,7 @@ class MediaGroupsDao extends Data_Access {
         }
 	}
 
-    public function getGroupMediaDao($params) {
+    public function getGroupMediaCollectionDao($params) {
         // var_dump($params);
         $result = array();
         $exec = array();
@@ -56,9 +56,19 @@ class MediaGroupsDao extends Data_Access {
         , $whereClausePaginate
         , $order
     );
-    // var_dump($sql);
+
+        // requete count media pour la pagination
+		$sqlCount = sprintf("SELECT COUNT(*) FROM  %s "
+        . " %s "
+        , CONST_DB_SCHEMA . "." . $this->object_view_media_groups
+        , $where
+        );
+        $execCount = $this->getResultSetArray($sqlCount);
+        $resultCount = intval(implode($execCount['data'][0]));
 
 		$exec = $this->getResultSetArray($sql);
+        $exec['count'] = $resultCount;
+
 		if ($exec['response'] !== '200') {
 			$result = App_Response::getResponse('403');
 		} else {
@@ -66,6 +76,7 @@ class MediaGroupsDao extends Data_Access {
 		}
 		return $result;
     }
+
 
     public function addMediaGroupsDao($params) {
 

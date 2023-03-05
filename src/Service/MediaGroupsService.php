@@ -16,7 +16,7 @@ class MediaGroupsService {
         return $result;
     }
 
-    public function getGroupMedia($params) {
+    public function getGroupMediaCollection($params) {
         // $get = $_GET;
         $reqParams = array();
         $reqParams = $params;
@@ -33,7 +33,7 @@ class MediaGroupsService {
         // var_dump($reqParams);
         // var_dump(isset($reqParams['offset']));
 
-        if (isset($reqParams['id']) && strlen($reqParams['id']) > 0) {
+        if (isset($reqParams['id']) && $reqParams['id'] > 0) {
             $parameters['id'] = $reqParams['id'];
         }
         if (isset($reqParams['search']) && strlen($reqParams['search']) > 0) {
@@ -56,7 +56,7 @@ class MediaGroupsService {
         $result = array();
         // var_dump($params);
         $mediaGroupsDao = new MediaGroupsDao();
-        $result = $mediaGroupsDao->getGroupMediaDao($parameters);
+        $result = $mediaGroupsDao->getGroupMediaCollectionDao($parameters);
 
         return $result;
     }

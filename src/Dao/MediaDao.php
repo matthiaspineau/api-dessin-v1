@@ -14,7 +14,7 @@ class MediaDao extends Data_Access {
 	}
 
     public function getMediaCollectionDao($params) {
- 
+		
         $exec = array();
         $execCount = array();
         $result = array();
@@ -82,45 +82,50 @@ class MediaDao extends Data_Access {
 
     public function createMediaDao($params) {
  
+		$return = array();
 		$values = array();
 		foreach($params as $key => $media) {
-			$values[] = sprintf("( '%s', '%s', '%s', %d, '%s')"
-				, mysqli_real_escape_string($GLOBALS['dbConnection'], $media['new_drawing_name']) 
-				, mysqli_real_escape_string($GLOBALS['dbConnection'], $media['new_drawing_reference']) 
-				, mysqli_real_escape_string($GLOBALS['dbConnection'], $media['new_drawing_title'])
-				, $media['id_drawing_category']
-				, mysqli_real_escape_string($GLOBALS['dbConnection'], $media['drawing_tags']) 
+			$values[] = sprintf("( '%s', '%s', '%s', '%s')"
+				, mysqli_real_escape_string($GLOBALS['dbConnection'], $media['name']) 
+				, mysqli_real_escape_string($GLOBALS['dbConnection'], $media['reference']) 
+				, mysqli_real_escape_string($GLOBALS['dbConnection'], $media['title'])
+				, mysqli_real_escape_string($GLOBALS['dbConnection'], $media['ext'])
+
 			);
 		}
 
 		$sql = sprintf("INSERT INTO %s "
-                . " ( `drawing_name`, `drawing_reference`, `drawing_title`, `id_drawing_category`, `drawing_tags`) "
+                . " ( `name`, `reference`, `title`, `ext`) "
                 . " VALUES "
                 . " %s "
                 , CONST_DB_SCHEMA . "." . $this->object_view_media
                 , implode(', ', $values)
             );
+
 		
 		$result = $this->setResultSetArray($sql);
 
 		if ($result['response'] !== '200') {
 
-			$responseArray = array(
+			$return = array(
                 'success' => false, 
                 'response' => 403,
                 'responseDescription' => 'Dao : erreur lors de l ajout du fichier');
 		} else {
-			$responseArray = $result;
+			$return = array(
+                'success' => true, 
+                'desc' => 'Les media ont bien été ajouter');
 		} 
 	
-		return $responseArray;
+		return $return;
     }
+
 
     public function updateMediaDao() {
         
     }
 
-    public function deleteMediaDao() {
+    public function deleteMediaDao($params) {
 
         $result = array();
         $exec = array();
@@ -135,7 +140,7 @@ class MediaDao extends Data_Access {
 
 			$exec = $this->setResultSetArray($sql);
 		}
-
+		// var_dump($exec);
 		if ($exec['response'] !== '200') {
 			$result = App_Response::getResponse('403');
 		} else {
@@ -144,6 +149,4 @@ class MediaDao extends Data_Access {
 		return $result;
     }
 
-    
-  
 }
