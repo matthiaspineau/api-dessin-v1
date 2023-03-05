@@ -8,7 +8,7 @@ abstract class Data_Access {
 		define("CONST_DB_HOST", "localhost");  // update with the location of your MySQL host.
 		define("CONST_DB_USERNAME", "root");
 		define("CONST_DB_PASSWORD", "");
-		define("CONST_DB_SCHEMA", "api_starter");
+		define("CONST_DB_SCHEMA", "api_draw_admin");
 
 		
 

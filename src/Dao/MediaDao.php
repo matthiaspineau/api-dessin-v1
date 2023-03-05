@@ -149,4 +149,76 @@ class MediaDao extends Data_Access {
 		return $result;
     }
 
+
+
+	public function getMediaDao($params) {
+
+		// build the query
+		$whereClause = array();
+		$where = '';
+		$whereClausePaginate = '';
+		$order = '';
+
+		if (isset($params['id']) && count($params['id']) > 0) {
+			$whereClause[] = " id IN (" . implode(', ', $params['id']) . ")";
+		}
+
+		if (isset($params['search']) && strlen($params['search']) > 0) {
+			$whereClause[] = " drawing_title LIKE '%" . $params['search'] . "%' ";
+		}
+
+		if (isset($params['limit']) && $params['limit'] > 0) {
+			$whereClausePaginate .= " LIMIT " . $params['limit'] . " ";
+		}
+
+		if (isset($params['offset']) && $params['offset'] > 0) {
+			$whereClausePaginate .= " OFFSET " . $params['offset'] . " ";
+		}
+		if (isset($params['order']) && strlen($params['order']) > 0) {
+			$order .= " ORDER BY " . $params['order'] . " ";
+		}
+		if (isset($params['direction']) && strlen($params['direction']) > 0) {
+			$order .= " " . $params['direction'] . " ";
+		}
+		
+
+		if (!empty($whereClause)) {
+			$where = " WHERE " . implode(' AND ', $whereClause);
+		}
+
+
+
+		// requete 1 for count
+		$sqlForCount = sprintf("SELECT COUNT(*) FROM  %s "
+			. " %s "
+			, CONST_DB_SCHEMA . "." . $this->object_view_media
+			, $where
+		);
+		$resultForCount = $this->getResultSetArray($sqlForCount);
+		$countItem = intval(implode($resultForCount['data'][0]));
+		// var_dump($countItem);
+		// requete 2 for result final
+
+
+		$sql = sprintf("SELECT * FROM  %s "
+			. " %s  %s "
+			, CONST_DB_SCHEMA . "." . $this->object_view_media
+			, $where
+			, $whereClausePaginate
+			, $order
+		);
+		// var_dump($sql);
+
+		$result = $this->getResultSetArray($sql);
+		$result['count'] = $countItem;
+		// var_dump($result['count'] );
+	
+		if ($result['response'] !== '200') {
+			$responseArray = App_Response::getResponse('403');
+		} else {
+			$responseArray = $result;
+		}
+		return $responseArray;
+	}
+
 }

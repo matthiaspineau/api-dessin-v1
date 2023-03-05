@@ -181,5 +181,15 @@ class MediaService {
         return $result;
     }
 
+    // public function getMedia($params) {
+
+    //     $result = array();
+
+    //     $mediaDao = new MediaDao();
+    //     $result = $mediaDao->getMediaDao($params);
+
+    //     return $result;
+    // }
+
 
 }
