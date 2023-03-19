@@ -18,40 +18,30 @@ class MediaGroupsService {
 
     public function getGroupMediaCollection($params) {
         // $get = $_GET;
-        $reqParams = array();
-        $reqParams = $params;
         $parameters = array();
 
-
-        // if (isset($_GET) && !empty($_GET)) {
-        //     $reqParams = $_GET;
-        // }
-        // if (isset($_POST)  && !empty($_POST)) {
-        //     $reqParams = $_POST;
-        // }
-    
-        // var_dump($reqParams);
-        // var_dump(isset($reqParams['offset']));
-
-        if (isset($reqParams['id']) && $reqParams['id'] > 0) {
-            $parameters['id'] = $reqParams['id'];
+        if (isset($params['id']) && $params['id'] > 0) {
+            $parameters['id'] = $params['id'];
         }
-        if (isset($reqParams['search']) && strlen($reqParams['search']) > 0) {
-            $parameters['search'] = $reqParams['search'];
+        if (isset($params['search']) && strlen($params['search']) > 0) {
+            $parameters['search'] = $params['search'];
         }
-        if (isset($reqParams['limit'])) {
-            $parameters['limit'] =  $reqParams['limit'];
+        if (isset($params['limit'])) {
+            $parameters['limit'] =  $params['limit'];
         }
-        if (isset($reqParams['offset'])) {
-            $parameters['offset'] =  $reqParams['offset'];
+        if (isset($params['offset'])) {
+            $parameters['offset'] =  $params['offset'];
         }
-        if (isset($reqParams['order']) && strlen($reqParams['order']) > 0) {
-			$parameters['order'] =  $reqParams['order'];
+        if (isset($params['order']) && strlen($params['order']) > 0) {
+			$parameters['order'] =  $params['order'];
 		}
-		if (isset($reqParams['direction']) && strlen($reqParams['direction']) > 0) {
-			$parameters['direction'] =  $reqParams['direction'];
+		if (isset($params['direction']) && strlen($params['direction']) > 0) {
+			$parameters['direction'] =  $params['direction'];
 		}
-
+        if (isset($params['is_indexed']) && $params['is_indexed'] == 1) {
+			
+		}
+        $parameters['is_indexed'] =  $params['is_indexed'] == 1 ? 1 : 0;
 
         $result = array();
         // var_dump($params);

@@ -74,6 +74,17 @@ class MediaGroupsDao extends Data_Access {
 		} else {
 			$result = $exec;
 		}
+        // var_dump($result);
+        if ($params['is_indexed'] == 1) {
+            $arrayDataIndexed = array();
+            foreach($result['data'] as $row) {
+                $arrayDataIndexed[$row['id']] = $row;
+            }
+            // var_dump($arrayData);
+            $result['data'] = $arrayDataIndexed;
+        }
+        
+    //    var_dump($result);
 		return $result;
     }
 
