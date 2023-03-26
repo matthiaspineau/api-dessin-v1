@@ -8,4 +8,4 @@ composer.phar
 /uploads_empty/
 
 #data_access
-/src/Dao/data_access.php
+/src/Dao/data_access
