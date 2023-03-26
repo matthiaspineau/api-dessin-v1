@@ -49,25 +49,6 @@ abstract class Data_Access {
 			// add array to return
 			$responseArray = App_Response::getResponse('200');
 			$responseArray['data'] = $rsArray;
-
-			// -------------------------------------
-            // success
-			// $rowCount = $rsData->num_rows;
-			
-			// if ($rowCount != 0) {
-				// // move result set to an associative array
-                // $rsArray = $rsData->fetch_all(MYSQLI_ASSOC);
-			
-				// // add array to return
-				// $responseArray = App_Response::getResponse('200');
-				// $responseArray['data'] = $rsArray;
-			// } 
-			// else {
-			// 	// no data returned
-			// 	$responseArray = App_Response::getResponse('204');
-            //     $responseArray['message'] = 'Query did not return any results.';
-			// }
-			// -------------------------------------
 			
 		}
 

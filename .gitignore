@@ -6,3 +6,6 @@ composer.phar
 /uploads/
 /uploads2/
 /uploads_empty/
+
+#data_access
+/src/Dao/data_access.php
