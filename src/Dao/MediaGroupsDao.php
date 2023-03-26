@@ -75,7 +75,7 @@ class MediaGroupsDao extends Data_Access {
 			$result = $exec;
 		}
         // var_dump($result);
-        if ($params['is_indexed'] == 1) {
+        if (isset($params['is_indexed']) && $params['is_indexed'] == 1) {
             $arrayDataIndexed = array();
             foreach($result['data'] as $row) {
                 $arrayDataIndexed[$row['id']] = $row;

@@ -19,7 +19,6 @@ class MediaGroupsService {
     public function getGroupMediaCollection($params) {
         // $get = $_GET;
         $parameters = array();
-
         if (isset($params['id']) && $params['id'] > 0) {
             $parameters['id'] = $params['id'];
         }
@@ -30,19 +29,17 @@ class MediaGroupsService {
             $parameters['limit'] =  $params['limit'];
         }
         if (isset($params['offset'])) {
-            $parameters['offset'] =  $params['offset'];
+            $parameters['offset'] = $params['offset'];
         }
         if (isset($params['order']) && strlen($params['order']) > 0) {
-			$parameters['order'] =  $params['order'];
+			$parameters['order'] = $params['order'];
 		}
 		if (isset($params['direction']) && strlen($params['direction']) > 0) {
-			$parameters['direction'] =  $params['direction'];
+			$parameters['direction'] = $params['direction'];
 		}
-        if (isset($params['is_indexed']) && $params['is_indexed'] == 1) {
-			
+        if (isset($params['is_indexed']) && strlen($params['is_indexed']) > 0) {
+			$parameters['is_indexed'] = $params['is_indexed'];
 		}
-        $parameters['is_indexed'] =  $params['is_indexed'] == 1 ? 1 : 0;
-
         $result = array();
         // var_dump($params);
         $mediaGroupsDao = new MediaGroupsDao();

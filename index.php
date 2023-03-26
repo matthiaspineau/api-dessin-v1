@@ -28,20 +28,18 @@ if (in_array($requestMethod, ["GET", "POST", "PUT", "DELETE", "OPTIONS"])) {
 
 	if ($requestMethod == "GET") {
 		$get = $_GET;
-		// $q = $_GET['q'];
-		// $requestController = $q;
-		// $requestParams = '';
-		// var_dump($get);
+		$url_components = parse_url($_SERVER['REQUEST_URI']);
+		parse_str($url_components['query'], $queryParams);
+
 		if (isset($get['controller'])) {
-			$requestController = $get['controller'];
+			$requestController = $queryParams['controller'];
 		}
 		if (isset($get['action'])) {
-			$requestAction = $get['action'];
+			$requestAction = $queryParams['action'];
 		}
-		if (isset($get['params'])) {
-			$requestParams = $get['params'];
-		}
-
+		
+		$requestParams = $queryParams;
+		
 	} 
 
 	if ($requestMethod == "POST") {
