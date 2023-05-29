@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style/bootstrap.css">
+    <link rel="stylesheet" href="./style/style.css">
+    <script src="./app" defer></script>
+    <title>Document</title>
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="restit">
+            <h5 class="h5 fb">Restitution</h5>
+            <div>
+                <div>title  : <span class="r-title"></span></div>
+                <div>description : <span class="r-desc"></span></div>
+            </div>
+            <div>
+                <div class="r-img"><img src="" alt=""></div>
+            </div>
+        </div>
+
+        <div class="form">
+            <h5 class="h5 fb">Formulaire</h5>
+            <div>
+                <h5>image</h5>
+                <form action="" ></form>
+                <form class="form-file-image">
+                    <label for="file">File to upload</label>
+                    <input type="file" id="file" accept="image/*">
+
+                    <button class="form-btn-upload btn btn-sm btn-primary">upload</button>
+                </form>
+            </div>
+
+            <div>
+                <h5>information</h5>
+                <div class="form-group mt-2">
+                    <label for="">Titre</label>
+                    <input type="text" name="title">
+                </div>
+                <div class="form-group  mt-2">
+                    <label for="">Description</label>
+                    <input type="text" name="description">
+                </div>
+            </div>
+
+        </div>
+
+        <div class="action">
+            <button class="btn btn-sm btn-primary act-save">sauvegarder</button>
+        </div>
+
+    </div>
+
+</body>
+</html>

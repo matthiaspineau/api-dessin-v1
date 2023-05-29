@@ -101,7 +101,7 @@ class MediaGroupsDao extends Data_Access {
         , CONST_DB_SCHEMA . "." . $this->object_view_media_groups
         , $params['reference']
         , json_encode(array("empty" => true))
-        , json_encode(array("empty" => true))
+        , json_encode(array("medias" => array()))
 
         );
 
@@ -114,6 +114,30 @@ class MediaGroupsDao extends Data_Access {
         } 
 
         return $result;
+    }
+
+    public function deleteGroupMediaDao($params) {
+
+        $result = array();
+        $exec = array();
+
+		if (isset($params['id']) && is_numeric($params['id'])) {
+			$sql = sprintf("DELETE FROM %s "
+					. " WHERE "
+					. " id= %d "
+					, CONST_DB_SCHEMA . "." . $this->object_view_media_groups
+					, $params['id']
+				);
+
+			$exec = $this->setResultSetArray($sql);
+		}
+		// var_dump($exec);
+		if ($exec['response'] !== '200') {
+			$result = App_Response::getResponse('403');
+		} else {
+			$result = $exec;
+		}
+		return $result;
     }
 
     

@@ -5,6 +5,15 @@ class MediaService {
 		
     }
 
+    
+    public function getMedias($params) {
+        // var_dump($params);
+        $result = array();
+        $mediaDao = new MediaDao();
+        $result = $mediaDao->getMedias($params);
+        // var_dump($result);
+        return $result;
+    }
 
     public function createMedia($params) {
 
@@ -22,6 +31,7 @@ class MediaService {
             $timestamp = time() . '_' . $i;
             $ext = pathinfo($_FILES['file']['name'][$i], PATHINFO_EXTENSION);
             $media['ext'] = $ext;
+            $media['original_name'] = $_FILES['file']['name'][$i]; 
             $media['name'] = $timestamp . '.' . $ext; 
             $media['reference'] = $params['reference'];
             $media['title'] =  "";
@@ -36,7 +46,7 @@ class MediaService {
                 'type' => $files['file']['type'][$i],
             );
 
-            $formatSize = array('small', 'thumbnail');
+            $formatSize = array('large', 'medium', 'small', 'thumbnail');
             foreach($formatSize as $format) {
                 $this->imageOtherSizeUpload($currentFile, $media['name'], $format);
             }
@@ -96,7 +106,8 @@ class MediaService {
         $src = imagecreatefrompng($file['tmp_name']);
         $dst = imagecreatetruecolor($width, $height);
         imagecopyresampled($dst, $src, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
-        imagepng($dst, $location,9);
+        // imagepng($dst, $location, 9 );
+        imagejpeg($dst, $location, 70);    
        
         imagedestroy($dst);
     }
@@ -191,5 +202,79 @@ class MediaService {
     //     return $result;
     // }
 
+    // public function testScaleMedia($params) {
+    //     var_dump($params);
 
+    //     $filenameImg = dirname(__FILE__, 3) . '/src/Service/' . 'Pages_14.png';
+    //     $dimension = getimagesize($filenameImg);
+    //     $size = filesize($filenameImg);
+
+    //     $width = $dimension[0];
+    //     $height = $dimension[1];
+
+    //     $newWidth = 1200;
+    //     $newHeight = ($newWidth * $height) / $width;
+
+    //     $newWidth2 = 700;
+    //     $newHeight2 = ($newWidth2 * $height) / $width;
+  
+    //     var_dump($dimension);
+    //     var_dump($size);
+    //     // var_dump($info);
+
+
+    //     // ----- code exemple
+            
+    //     // Load image file 
+    //     var_dump('---------------------------------------');
+    //     $newImage = imagecreatefrompng($filenameImg);  
+    //     // Use imagescale() function to scale the image
+    //     $newImg = imagescale( $newImage, $newWidth, $newHeight );
+    //     var_dump($newImg);
+    //     imagepng($newImg, dirname(__FILE__, 3) . '/src/Service/aa.png');
+    //     $newDimensionImage = getimagesize(dirname(__FILE__, 3) . '/src/Service/aa.png');
+    //     $newSizeImage = filesize(dirname(__FILE__, 3) . '/src/Service/aa.png');
+    //     var_dump($newDimensionImage);
+    //     var_dump($newSizeImage);
+
+    //     var_dump('---------------------------------------');
+    //     $newImage2 = imagecreatefrompng($filenameImg);
+    //     $newImg2 = imagescale( $newImage2, $newWidth2, $newHeight2 );
+    //     var_dump($newImg2);
+    //     imagepng($newImg2, dirname(__FILE__, 3) . '/src/Service/aa2.png');
+    //     $newDimensionImage2 = getimagesize(dirname(__FILE__, 3) . '/src/Service/aa2.png');
+    //     $newSizeImage2 = filesize(dirname(__FILE__, 3) . '/src/Service/aa2.png');
+    //     var_dump($newDimensionImage2);
+    //     var_dump($newSizeImage2);
+    //     // Output image in the browser 
+    //     // header("Content-type: image/png"); 
+    //     // imagepng($img); 
+    //     // ----- fin code exemple
+
+
+    //     return; 
+
+
+
+
+
+
+
+
+    //     // ----- code exemple
+    //     // Assign image file to variable 
+    //     $image_name = 
+    //     'https://media.geeksforgeeks.org/wp-content/uploads/geeksforgeeks-15.png'; 
+            
+    //     // Load image file 
+    //     $image = imagecreatefrompng($image_name);  
+        
+    //     // Use imagescale() function to scale the image
+    //     $img = imagescale( $image, 500, 400 );
+        
+    //     // Output image in the browser 
+    //     header("Content-type: image/png"); 
+    //     imagepng($img); 
+    //     // ----- fin code exemple
+    // }    
 }

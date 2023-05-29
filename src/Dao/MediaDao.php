@@ -13,6 +13,36 @@ class MediaDao extends Data_Access {
         }
 	}
 
+	public function getMedias($params) {
+
+		$whereClause = array();
+		$where = '';
+
+		if (isset($params['ids']) && count($params['ids']) > 0) {
+			$whereClause[] = " id IN (" . implode(', ', $params['ids']) . ")";
+		}
+
+		if (!empty($whereClause)) {
+			$where = " WHERE " . implode(' AND ', $whereClause);
+		}
+
+		$sql = sprintf("SELECT * FROM  %s "
+			. " %s "
+			, CONST_DB_SCHEMA . "." . $this->object_view_media
+			, $where
+	
+		);
+
+		$exec = $this->getResultSetArray($sql);
+
+		if ($exec['response'] !== '200') {
+			$result = App_Response::getResponse('403');
+		} else {
+			$result = $exec;
+		}
+		return $result;
+	}
+
     public function getMediaCollectionDao($params) {
 		
         $exec = array();
@@ -81,11 +111,12 @@ class MediaDao extends Data_Access {
     }
 
     public function createMediaDao($params) {
- 
+  
 		$return = array();
 		$values = array();
 		foreach($params as $key => $media) {
-			$values[] = sprintf("( '%s', '%s', '%s', '%s')"
+			$values[] = sprintf("( '%s', '%s', '%s', '%s', '%s')"
+				, mysqli_real_escape_string($GLOBALS['dbConnection'], $media['original_name']) 
 				, mysqli_real_escape_string($GLOBALS['dbConnection'], $media['name']) 
 				, mysqli_real_escape_string($GLOBALS['dbConnection'], $media['reference']) 
 				, mysqli_real_escape_string($GLOBALS['dbConnection'], $media['title'])
@@ -95,7 +126,7 @@ class MediaDao extends Data_Access {
 		}
 
 		$sql = sprintf("INSERT INTO %s "
-                . " ( `name`, `reference`, `title`, `ext`) "
+                . " ( `original_name`, `name`, `reference`, `title`, `ext`) "
                 . " VALUES "
                 . " %s "
                 , CONST_DB_SCHEMA . "." . $this->object_view_media

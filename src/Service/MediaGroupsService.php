@@ -47,6 +47,15 @@ class MediaGroupsService {
 
         return $result;
     }
+
+    public function deleteGroupMedia($params) {
+        $result = array();
+
+        $mediaDao = new MediaGroupsDao();
+        $result = $mediaDao->deleteGroupMediaDao($params);
+
+        return $result;
+    }
     
     public function updateMediasGroups($params) {
 

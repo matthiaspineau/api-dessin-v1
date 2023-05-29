@@ -1,0 +1,42 @@
+.restit {
+    min-height: 400px;
+    padding: 15px;
+    margin: 15px;
+    border: 1px solid grey;
+}
+
+.form {
+    min-height: 200px;
+    padding: 15px;
+    margin: 15px;
+    border: 1px solid grey;
+}
+
+.action {
+    min-height: 200px;
+    padding: 15px;
+    margin: 15px;
+    border: 1px solid grey;
+}
+
+.r-title {
+
+}
+
+.r-title {
+
+}
+
+.r-img {
+    height: 50px;
+    width: 50px;
+    border: 1px solid grey;
+}
+.r-img  img {
+    max-width: 100%;
+    height: auto;
+}
+
+.fb {
+    font-weight: bold;
+}
