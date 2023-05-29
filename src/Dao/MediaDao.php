@@ -152,8 +152,37 @@ class MediaDao extends Data_Access {
     }
 
 
-    public function updateMediaDao() {
-        
+    public function updateMediaDao($params) {
+        $result = array();
+        $exec = array();
+
+        $setClause = array();
+
+        if (isset($params['reference']) && is_numeric($params['reference'])) {
+            $setClause[] = sprintf("`reference`= '%s'", $params['reference']);
+        }
+        if (isset($params['title']) && strlen($params['title']) > 0) {
+            $setClause[] = sprintf("`title`= '%s'", $params['title']);
+        }
+ 
+		$sql = sprintf("UPDATE %s "
+			. " SET   %s "
+			. " WHERE "
+            . "  `id`= %d "
+			, CONST_DB_SCHEMA . "." . $this->object_view_media
+            ,  implode(' , ', $setClause)
+            ,  $params['id']
+		);  
+
+        $exec = $this->setResultSetArray($sql);
+
+        if ( !$exec['success'] ) {
+            return App_Response::getResponse('403');
+        }
+
+        $result = $exec;
+
+        return $result;
     }
 
     public function deleteMediaDao($params) {

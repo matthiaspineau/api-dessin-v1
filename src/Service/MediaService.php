@@ -131,7 +131,12 @@ class MediaService {
 
     }
 
-    public function updateMedia() {
+    public function updateMedia($params) {
+
+        $result = array();
+        $mediaDao = new MediaDao();
+        $result = $mediaDao->updateMediaDao($params);
+        return $result;
         
     }
 
@@ -253,11 +258,6 @@ class MediaService {
 
 
     //     return; 
-
-
-
-
-
 
 
 
