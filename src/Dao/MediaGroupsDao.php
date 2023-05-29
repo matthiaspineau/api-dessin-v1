@@ -95,13 +95,13 @@ class MediaGroupsDao extends Data_Access {
         $exec = array();
 
         $sql = sprintf("INSERT INTO %s "
-        . " ( `reference`, `information`, `medias`) "
+        . " ( `reference`, `information`, `ids_medias`) "
         . " VALUES "
         . " ('%s', '%s', '%s') "
         , CONST_DB_SCHEMA . "." . $this->object_view_media_groups
         , $params['reference']
         , json_encode(array("empty" => true))
-        , json_encode(array("medias" => array()))
+        , json_encode(array("ids_medias" => array()))
 
         );
 
@@ -147,8 +147,8 @@ class MediaGroupsDao extends Data_Access {
         $exec = array();
 
         $setClause = array();
-        if (isset($params['medias']) && strlen($params['medias']) > 0) {
-            $setClause[] = sprintf("`medias`= '%s'", $params['medias']);
+        if (isset($params['ids_medias']) && strlen($params['ids_medias']) > 0) {
+            $setClause[] = sprintf("`ids_medias`= '%s'", $params['ids_medias']);
         }
         if (isset($params['information']) && strlen($params['information']) > 0) {
             $setClause[] = sprintf("`information`= '%s'", $params['information']);
