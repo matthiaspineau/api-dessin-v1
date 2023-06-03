@@ -4,8 +4,6 @@ composer.phar
 /node_modules/
 
 /uploads/
-/uploads2/
-/uploads_empty/
 
 #data_access
 /src/Dao/data_access
