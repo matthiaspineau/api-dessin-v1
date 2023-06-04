@@ -11,8 +11,8 @@ class MediaGroupsService {
         $mediaGroupsDao = new MediaGroupsDao();
         $result = $mediaGroupsDao->addMediaGroupsDao($params);
         
-
-        $result = array('success' => TRUE, 'response' => 200, 'responseDescription' => 'le fichier à bien été ajouter');
+         var_dump($result);
+        
         return $result;
     }
 

@@ -7,17 +7,71 @@ class MediaService {
 
     
     public function getMedias($params) {
-        // var_dump($params);
         $result = array();
         $mediaDao = new MediaDao();
         $result = $mediaDao->getMedias($params);
-        // var_dump($result);
+
+        if (isset($params['indexed']) && $params['indexed'] == true) {
+            if ($result['success'] == true) {
+                $tmpArrayMedias = $this->formatIndexedListMedias($params['ids'], $result['data']);
+
+                $result['data'] = $tmpArrayMedias;
+            }
+        }
+
+        return $result;
+    }
+
+    public function formatIndexedListMedias(array $idsOrder, array $medias) {
+        $tmpArray = array();
+        if (!empty($idsOrder) && !empty($medias)) {
+
+            foreach ($idsOrder as $index => $idOrder) {
+                foreach ($medias as $k => $media) {
+                    if ($media['id'] == $idOrder) {
+                        $tmpArray[$index] = $media;
+                    }
+                }
+            }
+        }
+
+
+        return $tmpArray;
+    }
+
+    public function getMediaCollection() {
+
+        $get = $_GET;
+
+        $params = array();
+        if (isset($get['search']) && strlen($get['search']) > 0) {
+            $params['search'] = $get['search'];
+        }
+        if (isset($get['limit'])) {
+            $params['limit'] =  intval($get['limit']);
+        }
+        if (isset($get['offset'])) {
+            $params['offset'] =  intval($get['offset']);
+        }
+        if (isset($params['order']) && strlen($params['order']) > 0) {
+			$params['order'] =  $get['order'];
+		}
+		if (isset($params['direction']) && strlen($params['direction']) > 0) {
+			$params['direction'] =  $get['direction'];
+		}
+
+
+        $result = array();
+
+        $mediaDao = new MediaDao();
+        $result = $mediaDao->getMediaCollectionDao($params);
+
         return $result;
     }
 
     public function createMedia($params) {
 
-        $return = array();
+        $errors = array();
 
         if (!isset($_FILES['file'])) {
             return array('success' => false, "desc" => 'pas de fichiers');
@@ -46,19 +100,34 @@ class MediaService {
                 'type' => $files['file']['type'][$i],
             );
 
+            // controler , verifie que le $currentFile['tmp_name'] existe // sinon error
+            // pas faire d'enregsitrement en bdd pour tout l'upload
+            // et supprimer tous les fichier cree
+            if (  strlen($currentFile['tmp_name']) < 1 || strlen($currentFile['size']) < 1 ) {
+                $errors[] = $mediasCollection['original_name'] ?? '';
+                foreach($mediasCollection as $value) {
+                    $this->deleteFileMedia($value);
+                }
+                break;
+            }
+
             $formatSize = array('large', 'medium', 'small', 'thumbnail');
             foreach($formatSize as $format) {
                 $this->imageOtherSizeUpload($currentFile, $media['name'], $format);
             }
             
-
             $this->uploadFormatOriginal($currentFile, $media['name']);
 
         }
 
         // ----- save in bdd
-        $mediaDao = new MediaDao();
-        $result = $mediaDao->createMediaDao($mediasCollection);
+        if (count($errors) > 0) {
+            $result['desc'] = 'une erreur est survenue';
+            $result['log'] = json_encode($errors);
+        } else {
+            $mediaDao = new MediaDao();
+            $result = $mediaDao->createMediaDao($mediasCollection);
+        }
 
         return $result;
     }
@@ -140,6 +209,21 @@ class MediaService {
         
     }
 
+    public function deleteFileMedia($params) {
+        $filename = $params['name'];
+
+        $arrayFormatName = array('original', 'large', 'medium', 'small', 'thumbnail');
+        
+        foreach($arrayFormatName as $value) {
+            $pathUploads =  dirname(__FILE__, 3) . '/uploads/' . $value;
+            $location =  $pathUploads.'/'.$filename;
+            
+            if (file_exists($location)) {
+                unlink($location);
+            }
+        }
+    }
+
     public function deleteMedia($params) {
         $result = array();
 
@@ -163,36 +247,6 @@ class MediaService {
             }
            
 		}
-
-        return $result;
-    }
-
-    public function getMediaCollection() {
-
-        $get = $_GET;
-
-        $params = array();
-        if (isset($get['search']) && strlen($get['search']) > 0) {
-            $params['search'] = $get['search'];
-        }
-        if (isset($get['limit'])) {
-            $params['limit'] =  intval($get['limit']);
-        }
-        if (isset($get['offset'])) {
-            $params['offset'] =  intval($get['offset']);
-        }
-        if (isset($params['order']) && strlen($params['order']) > 0) {
-			$params['order'] =  $get['order'];
-		}
-		if (isset($params['direction']) && strlen($params['direction']) > 0) {
-			$params['direction'] =  $get['direction'];
-		}
-
-
-        $result = array();
-
-        $mediaDao = new MediaDao();
-        $result = $mediaDao->getMediaCollectionDao($params);
 
         return $result;
     }

@@ -2,6 +2,7 @@
 class MediaGroupsDao extends Data_Access {
 
     protected $object_view_media_groups = 'media_groups';
+    protected $res;
 
     public function __construct() {
 
@@ -95,14 +96,14 @@ class MediaGroupsDao extends Data_Access {
         $exec = array();
 
         $sql = sprintf("INSERT INTO %s "
-        . " ( `reference`, `information`, `ids_medias`) "
+        . " ( `reference`, `information`, `ids_medias`, `icone`) "
         . " VALUES "
-        . " ('%s', '%s', '%s') "
+        . " ('%s', '%s', '%s', '%s') "
         , CONST_DB_SCHEMA . "." . $this->object_view_media_groups
         , $params['reference']
         , json_encode(array("empty" => true))
         , json_encode(array("ids_medias" => array()))
-
+        , $params['icone'] ?? ''
         );
 
         $exec = $this->setResultSetArray($sql);
@@ -151,7 +152,7 @@ class MediaGroupsDao extends Data_Access {
             $setClause[] = sprintf("`ids_medias`= '%s'", $params['ids_medias']);
         }
         if (isset($params['information']) && strlen($params['information']) > 0) {
-            $setClause[] = sprintf("`information`= '%s'", $params['information']);
+            $setClause[] = sprintf("`information`= '%s'", addslashes($params['information']));
         }
         if (isset($params['is_active']) && is_numeric($params['is_active'])) {
             $setClause[] = sprintf("`is_active`= %d", $params['is_active']);
@@ -159,7 +160,10 @@ class MediaGroupsDao extends Data_Access {
         if (isset($params['reference']) && strlen($params['reference']) > 0) {
             $setClause[] = sprintf("`reference`= '%s'", $params['reference']);
         }
- 
+        if (isset($params['icone']) && strlen($params['icone']) > 0) {
+            $setClause[] = sprintf("`icone`= '%s'", $params['icone']);
+        }
+
 		$sql = sprintf("UPDATE %s "
 			. " SET   %s "
 			. " WHERE "
