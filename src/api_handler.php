@@ -117,12 +117,7 @@ class API_Handler {
 		$this->function_map = [
 			'getToken' => ['class' => 'API_Handler', 'controller_name' => 'getToken'],
 			'getArticles' => ['class' => 'API_Handler', 'controller_name' => 'getArticles'],
-			
-			// api draw - dessin
-			'DrawingController' => ['class' => 'API_Handler', 'controller_name' => 'DrawingController'],
 
-			// api draw - comics
-			'ComicsController' => ['class' => 'API_Handler', 'controller_name' => 'ComicsController'],
 
 			// api draw - dessin
 			'MediaController' => ['class' => 'API_Handler', 'controller_name' => 'MediaController'],

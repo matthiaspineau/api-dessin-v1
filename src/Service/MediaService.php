@@ -39,6 +39,17 @@ class MediaService {
         return $tmpArray;
     }
 
+    public function getMediaCollectionGrid($params) {
+
+        $result = array();
+
+        $mediaDao = new MediaDao();
+        $result = $mediaDao->getMediaCollectionGridDao($params);
+
+        return $result;
+    }
+
+
     public function getMediaCollection() {
 
         $get = $_GET;
@@ -176,7 +187,7 @@ class MediaService {
         $dst = imagecreatetruecolor($width, $height);
         imagecopyresampled($dst, $src, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
         // imagepng($dst, $location, 9 );
-        imagejpeg($dst, $location, 70);    
+        imagejpeg($dst, $location, -1);    
        
         imagedestroy($dst);
     }

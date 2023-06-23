@@ -13,12 +13,6 @@ $mapping = [
     'App_API_Key' => './src/Dao/app_api_key.php',
     'App_Test' => './src/Dao/app_test.php',
     
-    // API Drawing
-    'DrawingService' => './src/Service/DrawingService.php',
-    'DrawingDao' => './src/Dao/DrawingDao.php',
-    // API Comics
-    'ComicsService' => './src/Service/ComicsService.php',
-    'ComicsDao' => './src/Dao/ComicsDao.php',
     // API Media
     'MediaService' => './src/Service/MediaService.php',
     'MediaDao' => './src/Dao/MediaDao.php',
